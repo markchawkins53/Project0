@@ -1,12 +1,9 @@
 package com.revature.service;
 
-import java.util.HashMap;
 import java.util.Scanner;
 
-import com.revature.pojo.AuctionPosting;
-
-public class EmployeeAuctionService extends AuctionService{
-
+public class CustomerAuctionService extends AuctionService{
+	
 	private static Scanner scan = new Scanner(System.in);
 	
 	@Override
@@ -17,10 +14,8 @@ public class EmployeeAuctionService extends AuctionService{
 	@Override
 	protected void printOptionMenu () {
 		System.out.println("[1] View Cars On Lot");
-		System.out.println("[2] Manage Bids On Car From Lot");
-		System.out.println("[3] Add Car To Lot");
-		System.out.println("[4] Remove Car From Lot");
-		System.out.println("[5] Exit Menu");
+		System.out.println("[2] Put A Bid On Car");
+		System.out.println("[3] Exit Menu");
 	}
 	
 	@Override
@@ -34,15 +29,9 @@ public class EmployeeAuctionService extends AuctionService{
 				showAucPosts();
 				break;
 			case "2":
-				showBidsOnCar();
+				addBid();
 				break;
 			case "3":
-				addAuction();
-				break;
-			case "4":
-				removeAuction();
-				break;
-			case "5":
 				return;
 			default:
 				System.out.println("Did not understand input. Please select a proper input.");

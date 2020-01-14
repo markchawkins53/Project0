@@ -9,14 +9,14 @@ public class EmployeePortalService extends UserPortalService{
 	private static Scanner scan = new Scanner(System.in);
 
 	@Override
-	public void userPortServMain (User currentUser) {
+	public void userPortServMain (User curUser) {
 		while (true) {
 			printHeaderMessage();
 			printOptionMenu();
 			
 			switch (scan.nextLine()) {
 			case "1":
-				aucServ.aucServMain();
+				aucServ.aucServMain(curUser);
 				break;
 			case "2":
 				break;
@@ -38,7 +38,7 @@ public class EmployeePortalService extends UserPortalService{
 	@Override
 	public void printOptionMenu () {
 		System.out.println("[1] Look At Current Auctions");
-		System.out.println("[2] Look At Owned Cars");
+		System.out.println("[2] Look At Customer Cars");
 		System.out.println("[3] Logout");
 	}
 }

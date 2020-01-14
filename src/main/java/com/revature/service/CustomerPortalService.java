@@ -6,16 +6,18 @@ import com.revature.pojo.User;
 
 public class CustomerPortalService extends UserPortalService {
 	
+	private static CustomerAuctionService aucServ = new CustomerAuctionService();
 	private static Scanner scan = new Scanner(System.in);
 
 	@Override
-	public void userPortServMain (User currentUser) {
+	public void userPortServMain (User curUser) {
 		while (true) {
 			printHeaderMessage();
 			printOptionMenu();
 			
 			switch (scan.nextLine()) {
 			case "1":
+				aucServ.aucServMain(curUser);
 				break;
 			case "2":
 				break;
