@@ -26,5 +26,8 @@ public class Car implements Serializable{
 	public void setYear(String year) {
 		this.year = year;
 	}
+	public String getCarInfo() {
+		return year + " " + make + " " + model;
+	}
 	
 }

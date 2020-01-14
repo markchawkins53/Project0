@@ -29,8 +29,7 @@ public class AuctionDatabaseSerialization implements AuctionDatabaseDAO{
 			e.printStackTrace();
 		}catch (IOException e) {
 			e.printStackTrace();
-		}
-		
+		}		
 	}
 
 	@Override

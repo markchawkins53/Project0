@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.revature.dao.AuctionDatabaseSerialization;
 import com.revature.pojo.AuctionPosting;
 import com.revature.pojo.Car;
 import com.revature.pojo.User;
@@ -18,9 +19,12 @@ import com.revature.pojo.User;
 public class AuctionService {
 
 	private static Scanner scan = new Scanner(System.in);
+	private static AuctionDatabaseSerialization aucDB = new AuctionDatabaseSerialization();
 	private static List<AuctionPosting> aucPosts = null;
 	
 	public void aucServMain () {
+		aucPosts = aucDB.deserializeDB();		
+		optionChoice();
 	}
 	
 	protected void printHeaderMessage () {
@@ -31,13 +35,20 @@ public class AuctionService {
 		System.out.println("Auction Choices");
 	}
 	
-	public AuctionPosting createAuction () {
+	protected void optionChoice () {
+		
+	}
+	
+	public void addAuction () {
+		aucPosts.add(createAuction());		
+		aucDB.serializeDB(aucPosts);
+	}
+	
+	public AuctionPosting createAuction () {		
 		AuctionPosting newPost = new AuctionPosting();
 		
 		newPost.setCar(createCar());
 		newPost.setBids(new HashMap<String, Float>());
-		
-		serializeDB();
 		
 		return newPost;
 	}
@@ -57,42 +68,36 @@ public class AuctionService {
 		return newCar;
 	}
 	
-	public void showAucPosts () {
-		for (int i = 0; i < aucPosts.size(); i++) {
-			System.out.println("[" + (i + 1) + "] " + aucPosts.get(i).getCar());
-		}
-	}
-	
-	private static void serializeDB () {
-		String filename = "AuctionDB.dat";
+	public boolean removeAuction () {
+		System.out.println("Please select car's lot number: ");
+		Integer carIndex = null;
 		
-		try (FileOutputStream fos = new FileOutputStream(filename);
-				ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-			
-			oos.writeObject(aucPosts);
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}catch (IOException e) {
-			e.printStackTrace();
+		try {
+			carIndex = Integer.parseInt(scan.nextLine());
+		} catch (NumberFormatException e) {
+			System.out.println("Please select a valid lot number.");
+			return false;
 		}
+		
+		try {
+			aucPosts.get(carIndex - 1);
+		}catch (IndexOutOfBoundsException e) {
+			System.out.println("Please select a valid lot number.");
+			return false;
+		}
+		
+		aucPosts.remove(carIndex - 1);
+		aucDB.serializeDB(aucPosts);
+		System.out.println("Remove Car From Lot");
+		
+		return true;
 	}
 	
-	private static void deserializeDB () {
-		String filename = "AuctionDB.dat";
-
-		try (FileInputStream fis = new FileInputStream(filename);
-				ObjectInputStream ois = new ObjectInputStream(fis)) {
-			
-			aucPosts = (List<AuctionPosting>) ois.readObject();
-			
-		} catch (FileNotFoundException e) {
-			System.out.println("No File");
-			aucPosts = new LinkedList<AuctionPosting>();
-		}catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+	public void showAucPosts () {		
+		System.out.println(aucPosts.size());
+		
+		for (int i = 0; i < aucPosts.size(); i++) {
+			System.out.println("[" + (i + 1) + "] " + aucPosts.get(i).getCar().getCarInfo());
 		}
 	}
 	

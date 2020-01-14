@@ -5,6 +5,7 @@ import java.util.Scanner;
 import com.revature.pojo.User;
 
 public class EmployeePortalService extends UserPortalService{
+	private static EmployeeAuctionService aucServ = new EmployeeAuctionService();
 	private static Scanner scan = new Scanner(System.in);
 
 	@Override
@@ -15,6 +16,7 @@ public class EmployeePortalService extends UserPortalService{
 			
 			switch (scan.nextLine()) {
 			case "1":
+				aucServ.aucServMain();
 				break;
 			case "2":
 				break;
@@ -36,7 +38,7 @@ public class EmployeePortalService extends UserPortalService{
 	@Override
 	public void printOptionMenu () {
 		System.out.println("[1] Look At Current Auctions");
-		System.out.println("[2] Add Car To Auction");
+		System.out.println("[2] Look At Owned Cars");
 		System.out.println("[3] Logout");
 	}
 }
