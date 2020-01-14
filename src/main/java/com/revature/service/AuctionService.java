@@ -99,6 +99,11 @@ public class AuctionService {
 		
 		if (carIndex < 0)
 			return;
+		
+		if (aucPosts.get(carIndex).getBids().isEmpty()) {
+			System.out.println("There are no bid currently on this auction");
+			return;
+		}
 
 		List<String> usernames = new ArrayList<>();
 		
@@ -121,7 +126,8 @@ public class AuctionService {
 			
 			switch(scan.nextLine()) {
 			case "1":
-				break;
+				acceptBid(carIndex, usernames);
+				return;
 			case "2":
 				removeBid(carIndex, usernames);
 				break;
@@ -154,14 +160,15 @@ public class AuctionService {
 		}
 		
 		Map<String, User> userDB = userSer.deserializeDB(User.UserType.Customer.toString());
-		Car carToAdd = aucPosts.get(postIndex).getCar();
+		Car carToAdd = aucPosts.get(postIndex - 1).getCar();
 		String winUsername = usernames.get(bidIndex - 1);
 		User winUser = userDB.get(winUsername);
 		
 		winUser.getOwnedCars().add(carToAdd);
+		userSer.updateUser(userDB, winUser);
 		
-		//aucPosts.get(carIndex).getBids().remove(usernames.get(bidIndex - 1));
-		//aucDB.serializeDB(aucPosts);
+		aucPosts.remove(postIndex);
+		aucDB.serializeDB(aucPosts);
 		System.out.println("Accepted Bid From Car\n");
 	}
 	
