@@ -37,8 +37,8 @@ public class EmployeePortalService extends UserPortalService{
 	
 	@Override
 	public void printOptionMenu () {
-		System.out.println("[1] Look At Current Auctions");
-		System.out.println("[2] Look At Customer Cars");
+		System.out.println("[1] Auctions Manager");
+		System.out.println("[2] Customer Manager");
 		System.out.println("[3] Logout");
 	}
 }

@@ -40,7 +40,7 @@ public class CustomerPortalService extends UserPortalService {
 	
 	@Override
 	public void printOptionMenu () {
-		System.out.println("[1] Look At Current Auctions");
+		System.out.println("[1] Auction Manager");
 		System.out.println("[2] Owned Car Manager");
 		System.out.println("[3] Logout");
 	}

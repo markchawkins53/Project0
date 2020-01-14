@@ -72,6 +72,8 @@ public class AuctionService {
 		System.out.println("Please Enter The Car's Year: ");
 		newCar.setYear(scan.nextLine());
 		
+		newCar.setRemPayments(new ArrayList<Float>());
+		
 		return newCar;
 	}
 	
@@ -164,6 +166,11 @@ public class AuctionService {
 		String winUsername = usernames.get(bidIndex - 1);
 		User winUser = userDB.get(winUsername);
 		
+		Float bidAmount = aucPosts.get(postIndex - 1).getBids().get(usernames.get(bidIndex - 1));
+		
+		for (int i = 0; i < 60; i++)
+			carToAdd.getRemPayments().add(bidAmount / 60);
+		
 		winUser.getOwnedCars().add(carToAdd);
 		System.out.println(winUser.getOwnedCars().size());
 		userSer.updateUser(userDB, winUser);
@@ -192,7 +199,7 @@ public class AuctionService {
 			return;
 		}
 		
-		aucPosts.get(carIndex).getBids().remove(usernames.get(bidIndex - 1));
+		aucPosts.get(carIndex - 1).getBids().remove(usernames.get(bidIndex - 1));
 		aucDB.serializeDB(aucPosts);
 		System.out.println("Removed Bid From Car\n");
 	}

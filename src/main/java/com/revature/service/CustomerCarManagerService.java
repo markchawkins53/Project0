@@ -1,5 +1,6 @@
 package com.revature.service;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Scanner;
 
@@ -23,6 +24,7 @@ public class CustomerCarManagerService {
 				viewUserCars();
 				break;
 			case "2":
+				viewPaymentsLeftOnCar();
 				break;
 			case "3":
 				return;
@@ -47,13 +49,38 @@ public class CustomerCarManagerService {
 			
 	}
 	
+	public void viewPaymentsLeftOnCar() {
+		int ownedCarIndex = 0;
+		System.out.println("Please select a car you own");
+		
+		try {
+			ownedCarIndex = Integer.parseInt(scan.nextLine());
+		} catch (NumberFormatException e) {
+			System.out.println("Please select a valid number");
+			return;
+		}
+		
+		try {
+			currentUser.getOwnedCars().get(ownedCarIndex - 1);
+		}catch (IndexOutOfBoundsException e) {
+			System.out.println("Please select a valid number");
+			return;
+		}
+		
+		int paymentsLeft = currentUser.getOwnedCars().get(ownedCarIndex - 1).getRemPayments().size();
+		Float amountPerPayment = currentUser.getOwnedCars().get(ownedCarIndex - 1).getRemPayments().get(0);
+		DecimalFormat decialHund = new DecimalFormat("#.##");
+		
+		System.out.println("You have " + paymentsLeft + " months left @ " + decialHund.format( (double)amountPerPayment) + " each.");
+	}
+	
 	public void printHeaderMessage () {
 		System.out.println("Owned Car Manager");
 	}
 	
 	public void printOptionMenu () {
 		System.out.println("[1] Look At Owned Cars");
-		System.out.println("[2] faojan");
+		System.out.println("[2] View Payments Left On Owned Car");
 		System.out.println("[3] Logout");
 	}
 }
