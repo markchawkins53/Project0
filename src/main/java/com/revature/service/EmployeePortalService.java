@@ -6,6 +6,7 @@ import com.revature.pojo.User;
 
 public class EmployeePortalService extends UserPortalService{
 	private static EmployeeAuctionService aucServ = new EmployeeAuctionService();
+	private static EmployeeCustomerManagerService custManSer = new EmployeeCustomerManagerService();
 	private static Scanner scan = new Scanner(System.in);
 
 	@Override
@@ -19,6 +20,7 @@ public class EmployeePortalService extends UserPortalService{
 				aucServ.aucServMain(curUser);
 				break;
 			case "2":
+				custManSer.custManSerMain();
 				break;
 			case "3":
 				return;
