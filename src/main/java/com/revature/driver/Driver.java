@@ -26,12 +26,11 @@ public class Driver {
 				portServ = new EmployeePortalService();
 				portServ.userPortServMain(currentUser);
 			}
-			
 		}
 	}
 	
 	private static boolean userLogin() {
-		do {
+		while (true) {
 			System.out.println("[1]: Login as Customer");
 			System.out.println("[2]: Login as Employee");
 			System.out.println("[3]: Exit Program");
@@ -43,12 +42,16 @@ public class Driver {
 				
 				if (currentUser != null)
 					return true;
+				
+				break;
 			case "2":
 				logDriver = new EmployeeLoginService();
 				currentUser = logDriver.logDriverMain();
 				
 				if (currentUser != null)
 					return true;
+				
+				break;
 			case "3":
 				return false;
 			default:
@@ -56,6 +59,6 @@ public class Driver {
 				break;
 			}
 			
-		} while (true);
+		}
 	}
 }

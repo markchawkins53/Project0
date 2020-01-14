@@ -100,7 +100,7 @@ public class AuctionService {
 		if (carIndex < 0)
 			return;
 		
-		if (aucPosts.get(carIndex).getBids().isEmpty()) {
+		if (aucPosts.get(carIndex - 1).getBids().isEmpty()) {
 			System.out.println("There are no bid currently on this auction");
 			return;
 		}
@@ -108,7 +108,7 @@ public class AuctionService {
 		List<String> usernames = new ArrayList<>();
 		
 		while (true) {
-			Iterator bids = aucPosts.get(carIndex).getBids().entrySet().iterator();
+			Iterator bids = aucPosts.get(carIndex - 1).getBids().entrySet().iterator();
 			usernames.clear();
 			
 			while(bids.hasNext()) {
@@ -165,9 +165,10 @@ public class AuctionService {
 		User winUser = userDB.get(winUsername);
 		
 		winUser.getOwnedCars().add(carToAdd);
+		System.out.println(winUser.getOwnedCars().size());
 		userSer.updateUser(userDB, winUser);
 		
-		aucPosts.remove(postIndex);
+		aucPosts.remove(postIndex - 1);
 		aucDB.serializeDB(aucPosts);
 		System.out.println("Accepted Bid From Car\n");
 	}
@@ -212,7 +213,7 @@ public class AuctionService {
 			return;
 		}
 		
-		aucPosts.get(carIndex).getBids().put(currentUser.getUsername(), carBid);
+		aucPosts.get(carIndex - 1).getBids().put(currentUser.getUsername(), carBid);
 		aucDB.serializeDB(aucPosts);
 		System.out.println("Added Bid To Car\n");
 	}

@@ -17,7 +17,6 @@ public class User implements Serializable{
 	private UserType userType;
 
 	private List<Car> ownedCars;
-	private List<AuctionPosting> currentBids;
 	
 	
 	public UserType getUserType() {
@@ -44,11 +43,5 @@ public class User implements Serializable{
 	}
 	public void setPassword(String password) {
 		this.password = password;
-	}	
-	public List<AuctionPosting> getCurrentBids() {
-		return currentBids;
-	}
-	public void setCurrentBids(List<AuctionPosting> currentBids) {
-		this.currentBids = currentBids;
 	}
 }

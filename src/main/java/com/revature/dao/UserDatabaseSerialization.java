@@ -55,7 +55,7 @@ public class UserDatabaseSerialization implements UserDatabaseDAO{
 	
 	@Override
 	public void updateUser (Map<String, User> userDB, User userToUpdate) {
-		userDB.put(userToUpdate.getUsername(), userToUpdate);		
+		userDB.put(userToUpdate.getUsername(), userToUpdate);
 		serializeDB(userDB, userToUpdate.getUserType().toString());
 	}
 }

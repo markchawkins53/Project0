@@ -7,6 +7,7 @@ import com.revature.pojo.User;
 public class CustomerPortalService extends UserPortalService {
 	
 	private static CustomerAuctionService aucServ = new CustomerAuctionService();
+	private static CustomerCarManagerService carManSer = new CustomerCarManagerService();
 	private static Scanner scan = new Scanner(System.in);
 
 	@Override
@@ -20,6 +21,7 @@ public class CustomerPortalService extends UserPortalService {
 				aucServ.aucServMain(curUser);
 				break;
 			case "2":
+				carManSer.carManServMain(curUser);
 				break;
 			case "3":
 				return;
@@ -39,7 +41,7 @@ public class CustomerPortalService extends UserPortalService {
 	@Override
 	public void printOptionMenu () {
 		System.out.println("[1] Look At Current Auctions");
-		System.out.println("[2] Look At Owned Cars");
+		System.out.println("[2] Owned Car Manager");
 		System.out.println("[3] Logout");
 	}
 }
