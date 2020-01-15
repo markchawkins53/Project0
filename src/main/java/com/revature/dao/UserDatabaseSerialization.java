@@ -7,20 +7,25 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
+import com.revature.pojo.Car;
 import com.revature.pojo.User;
 
 public class UserDatabaseSerialization implements UserDatabaseDAO{
 
+	private static Map<String, User> dbHolder;
+	private static User.UserType dbUserType;
+	
 	@Override
-	public void serializeDB (Map<String, User> userDB, String userType) {
-		String filename = userType + "DB.dat";
+	public void serializeDB () {
+		String filename = dbUserType.toString() + "DB.dat";
 		
 		try (FileOutputStream fos = new FileOutputStream(filename);
 				ObjectOutputStream oos = new ObjectOutputStream(fos)) {
 			
-			oos.writeObject(userDB);
+			oos.writeObject(dbHolder);
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -31,48 +36,72 @@ public class UserDatabaseSerialization implements UserDatabaseDAO{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, User> deserializeDB (String userType) {
-		String filename = userType + "DB.dat";
-		Map<String, User> userDB = null;
+	public boolean deserializeDB (User.UserType userType) {
+		String filename = userType.toString() + "DB.dat";
+		dbUserType = userType;
 		
 		try (FileInputStream fis = new FileInputStream(filename);
 				ObjectInputStream ois = new ObjectInputStream(fis)) {
 			
-			userDB = (HashMap<String, User>) ois.readObject();
+			dbHolder = (HashMap<String, User>) ois.readObject();
 			
 		} catch (FileNotFoundException e) {
-			userDB = new HashMap<String, User>();
-			return userDB;
+			dbHolder = new HashMap<String, User>();
+			return true;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-			return null;
+			return false;
 		} catch (IOException e) {
 			e.printStackTrace();
-			return null;
+			return false;
 		}
 		
-		return userDB;
+		return true;
 	}
 	
 	@Override
-	public void addUser () {
+	public boolean checkUserExists (String username) {		
+		if (dbHolder.get(username) == null)
+			return false;
 		
+		return true;
 	}
 	
 	@Override
-	public void removeUser () {
+	public boolean addUser (String username, String password) {
+		User newUser = new User();
+
+		if (checkUserExists(username))
+			return false;
 		
+		newUser.setUsername(username);
+		newUser.setPassword(password);
+		newUser.setOwnedCars(new LinkedList<Car>());
+		newUser.setUserType(dbUserType);
+		
+		dbHolder.put(username, newUser);
+		
+		return true;
 	}
 	
 	@Override
-	public void updateUser (Map<String, User> userDB, User userToUpdate) {
-		userDB.put(userToUpdate.getUsername(), userToUpdate);
-		serializeDB(userDB, userToUpdate.getUserType().toString());
+	public boolean removeUser (String username) {
+		if (!checkUserExists(username))
+			return false;
+		
+		dbHolder.remove(username);
+		
+		return true;
 	}
 	
 	@Override
-	public User getUser (String username, User.UserType userType) {
-		Map<String, User> dbHolder = deserializeDB(userType.toString());
+	public void updateUser (User userToUpdate) {		
+		dbHolder.put(userToUpdate.getUsername(), userToUpdate);
+		serializeDB();
+	}
+	
+	@Override
+	public User getUser (String username) {
 		
 		try {
 			dbHolder.get(username);
@@ -81,7 +110,11 @@ public class UserDatabaseSerialization implements UserDatabaseDAO{
 		} catch (NullPointerException e) {
 			return null;
 		}
-				
+		
 		return dbHolder.get(username);
+	}
+	
+	public static Map<String, User> getDbHolder() {
+		return dbHolder;
 	}
 }

@@ -21,7 +21,7 @@ public class CustomerLoginService extends UserLoginService {
 	}
 	
 	@Override
-	public void setUserType (User newUser) {
-		newUser.setUserType(User.UserType.Customer);
+	public void setUserType () {
+		userType = User.UserType.Customer;
 	}
 }

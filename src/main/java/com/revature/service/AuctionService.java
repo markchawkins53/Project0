@@ -24,7 +24,7 @@ public class AuctionService {
 
 	private static Scanner scan = new Scanner(System.in);
 	private static AuctionDatabaseSerialization aucDB = new AuctionDatabaseSerialization();
-	private static UserDatabaseSerialization userSer = new UserDatabaseSerialization();
+	private static UserDatabaseSerialization userDB = new UserDatabaseSerialization();
 	private static List<AuctionPosting> aucPosts = null;
 	private static User currentUser = null;
 	
@@ -180,10 +180,10 @@ public class AuctionService {
 			return;
 		}
 		
-		Map<String, User> userDB = userSer.deserializeDB(User.UserType.Customer.toString());
+		userDB.deserializeDB(User.UserType.Customer);
 		Car carToAdd = aucPosts.get(postIndex - 1).getCar();
 		String winUsername = usernames.get(bidIndex - 1);
-		User winUser = userDB.get(winUsername);
+		User winUser = userDB.getUser(winUsername);
 		
 		Float bidAmount = aucPosts.get(postIndex - 1).getBids().get(usernames.get(bidIndex - 1));
 		
@@ -192,7 +192,7 @@ public class AuctionService {
 		
 		winUser.getOwnedCars().add(carToAdd);
 		System.out.println(winUser.getOwnedCars().size());
-		userSer.updateUser(userDB, winUser);
+		userDB.updateUser(winUser);
 		
 		aucPosts.remove(postIndex - 1);
 		aucDB.serializeDB(aucPosts);

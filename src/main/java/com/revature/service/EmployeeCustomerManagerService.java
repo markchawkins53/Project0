@@ -53,8 +53,10 @@ public class EmployeeCustomerManagerService {
 		System.out.println("[3] Exit Menu");
 	}
 	
-	public List<User> getUsersFromDB() {		
-		Iterator usersFromDB = userDB.deserializeDB(User.UserType.Customer.toString()).entrySet().iterator();
+	public List<User> getUsersFromDB() {
+		userDB.deserializeDB(User.UserType.Customer);
+		
+		Iterator usersFromDB = userDB.getDbHolder().entrySet().iterator();
 		List<User> usersHolder = new LinkedList<>();
 		
 		while(usersFromDB.hasNext()) {

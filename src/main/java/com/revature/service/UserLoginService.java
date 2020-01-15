@@ -19,15 +19,14 @@ import com.revature.pojo.User;
 public class UserLoginService {
 
 	private static Scanner scan = new Scanner(System.in);
-	private static UserDatabaseSerialization userDBSerial = new UserDatabaseSerialization();
-	private static Map<String, User> userDB = null;
+	private static UserDatabaseSerialization userDB = new UserDatabaseSerialization();
 	protected User.UserType userType = User.UserType.Generic;
 	
 	public User logDriverMain () {
 		User userInfo;
 		
-		
-		userDB = userDBSerial.deserializeDB(userType.toString());
+		setUserType();
+		userDB.deserializeDB(userType);
 		
 		while (true) {
 			System.out.println("\n||=============================================||");
@@ -38,7 +37,7 @@ public class UserLoginService {
 			case "1":
 				userInfo = getUserInfoInput();
 				if (checkLoginInfo(userInfo)) {
-					return getUserData(userInfo.getUsername());
+					return userDB.getUser(userInfo.getUsername());
 				}
 				break;
 			case "2": 
@@ -91,57 +90,41 @@ public class UserLoginService {
 	}
 	
 	public User registerUser () {		
-		User newUser = new User();
+		String username = "";
+		String password = "";
 		
 		while (true) {
 			System.out.println("\n||---------------------------------------------||");
 			System.out.println("Please enter a Username to use: ");
 			
-			newUser.setUsername(scan.nextLine());
-			if (checkUserExists(newUser.getUsername())) {
+			username = scan.nextLine();
+			if (userDB.checkUserExists(username)) {
 				System.out.println("\n||---------------------------------------------||");
 				System.out.println("Username currently in use.");
 				continue;
 			}
 			
 			System.out.println("Please enter a Password to use: ");
-			newUser.setPassword(scan.nextLine());
+			password = scan.nextLine();
+			
+			userDB.addUser(username, password);
+			userDB.serializeDB();
+			
 			break;
-		}
-		
-		newUser.setOwnedCars(new LinkedList<Car>());
-		setUserType(newUser);
-		
-		userDB.put(newUser.getUsername(), newUser);
-		
-		userDBSerial.serializeDB (userDB, newUser.getUserType().toString());
-		
-		return newUser;
-	}
-	
-	public void setUserType (User newUser) {
-		newUser.setUserType(User.UserType.Generic);
-	}
-	
-	public boolean checkUserExists (String username) {
-		if (userDB.get(username) != null)
-			return true;
-		else
-			return false;
-	}
-	
-	public User getUserData (String username) {
-		if (checkUserExists(username))
-			return userDB.get(username);
+		}	
 		
 		return null;
 	}
 	
+	public void setUserType () {
+		userType = User.UserType.Generic;
+	}
+	
 	public boolean authenticateUser (User authUser) {
-		if (!checkUserExists(authUser.getUsername()))
+		if (!userDB.checkUserExists(authUser.getUsername()))
 			return false;
 		
-		User userHolder = userDB.get(authUser.getUsername());
+		User userHolder = userDB.getUser(authUser.getUsername());
 		
 		if (userHolder.getPassword().equals(authUser.getPassword()))
 			return true;
