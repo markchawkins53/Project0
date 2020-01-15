@@ -16,6 +16,7 @@ public class CustomerCarManagerService {
 		currentUser = curUser;
 		
 		while (true) {
+			System.out.println("\n||=============================================||");
 			printHeaderMessage();
 			printOptionMenu();
 			
@@ -29,6 +30,7 @@ public class CustomerCarManagerService {
 			case "3":
 				return;
 			default:
+				System.out.println("\n||---------------------------------------------||");
 				System.out.println("Did not understand input. Please select a proper input.");
 				break;
 			}
@@ -39,10 +41,12 @@ public class CustomerCarManagerService {
 		List<Car> ownedCars = currentUser.getOwnedCars();
 		
 		if (ownedCars.isEmpty()) {
+			System.out.println("\n||---------------------------------------------||");
 			System.out.println("You currently have no owned cars");
 			return;
 		}
 		
+		System.out.println("\n||---------------------------------------------||");
 		for(int i = 0; i < ownedCars.size(); i++) {
 			System.out.println("[" + (i + 1) + "] " + ownedCars.get(i).getCarInfo());
 		}
@@ -51,11 +55,13 @@ public class CustomerCarManagerService {
 	
 	public void viewPaymentsLeftOnCar() {
 		int ownedCarIndex = 0;
+		System.out.println("\n||---------------------------------------------||");
 		System.out.println("Please select a car you own");
 		
 		try {
 			ownedCarIndex = Integer.parseInt(scan.nextLine());
 		} catch (NumberFormatException e) {
+			System.out.println("\n||---------------------------------------------||");
 			System.out.println("Please select a valid number");
 			return;
 		}
@@ -63,6 +69,7 @@ public class CustomerCarManagerService {
 		try {
 			currentUser.getOwnedCars().get(ownedCarIndex - 1);
 		}catch (IndexOutOfBoundsException e) {
+			System.out.println("\n||---------------------------------------------||");
 			System.out.println("Please select a valid number");
 			return;
 		}
@@ -71,6 +78,7 @@ public class CustomerCarManagerService {
 		Float amountPerPayment = currentUser.getOwnedCars().get(ownedCarIndex - 1).getRemPayments().get(0);
 		DecimalFormat decialHund = new DecimalFormat("#.##");
 		
+		System.out.println("\n||---------------------------------------------||");
 		System.out.println("You have " + paymentsLeft + " months left @ " + decialHund.format( (double)amountPerPayment) + " each.");
 	}
 	

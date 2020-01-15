@@ -30,6 +30,7 @@ public class UserLoginService {
 		userDB = userDBSerial.deserializeDB(userType.toString());
 		
 		while (true) {
+			System.out.println("\n||=============================================||");
 			printLoginMessage();
 			printOptionMenu();
 			
@@ -65,6 +66,9 @@ public class UserLoginService {
 	
 	public User getUserInfoInput () {
 		User userInput = new User ();
+		
+		System.out.println("\n||---------------------------------------------||");
+		
 		System.out.println("Please Enter Your Username: ");
 		userInput.setUsername(scan.nextLine());
 		
@@ -76,10 +80,11 @@ public class UserLoginService {
 	
 	public boolean checkLoginInfo (User loginInfo) {
 		if (authenticateUser(loginInfo)) {
+			System.out.println("\n||---------------------------------------------||");
 			System.out.println("Successful Login");
 			return true;
 		}
-				
+		System.out.println("\n||---------------------------------------------||");
 		System.out.println("Invalid Username/Password");
 		
 		return false;
@@ -89,10 +94,12 @@ public class UserLoginService {
 		User newUser = new User();
 		
 		while (true) {
+			System.out.println("\n||---------------------------------------------||");
 			System.out.println("Please enter a Username to use: ");
 			
 			newUser.setUsername(scan.nextLine());
 			if (checkUserExists(newUser.getUsername())) {
+				System.out.println("\n||---------------------------------------------||");
 				System.out.println("Username currently in use.");
 				continue;
 			}

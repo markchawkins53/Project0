@@ -22,6 +22,7 @@ public class EmployeeCustomerManagerService {
 		users = getUsersWithCars(users);
 		
 		while (true) {
+			System.out.println("\n||=============================================||");
 			printHeaderMessage();
 			printOptionMenu();
 			
@@ -49,7 +50,7 @@ public class EmployeeCustomerManagerService {
 	public void printOptionMenu () {
 		System.out.println("[1] Get Users With Cars");
 		System.out.println("[2] View Payments Left On User's Car(s)");
-		System.out.println("[3] Exit");
+		System.out.println("[3] Exit Menu");
 	}
 	
 	public List<User> getUsersFromDB() {		
@@ -92,11 +93,13 @@ public class EmployeeCustomerManagerService {
 	public int selectUser() {
 		int tempIndex = 0;
 		
+		System.out.println("\n||---------------------------------------------||");
 		System.out.println("Please select a user with a car");
 		
 		try {
 			tempIndex = Integer.parseInt(scan.nextLine());
 		} catch (NumberFormatException e) {
+			System.out.println("\n||---------------------------------------------||");
 			System.out.println("Please select a valid number");
 			return - 1;
 		}
@@ -104,6 +107,7 @@ public class EmployeeCustomerManagerService {
 		try {
 			users.get(tempIndex - 1);
 		}catch (IndexOutOfBoundsException e) {
+			System.out.println("\n||---------------------------------------------||");
 			System.out.println("Please select a valid number");
 			return -1;
 		}
@@ -115,8 +119,10 @@ public class EmployeeCustomerManagerService {
 		if (userHolder == null) {
 			return;
 		}
+		
+		System.out.println("\n||---------------------------------------------||");
 		for (Car c: userHolder.getOwnedCars()) {
-			int paymentsLeft = c.getRemPayments().size() / 60;
+			int paymentsLeft = c.getRemPayments().size();
 			Float amountPerPayment = c.getRemPayments().get(0);
 			DecimalFormat decialHund = new DecimalFormat("#.##");
 			System.out.println(c.getCarInfo() + " : " + paymentsLeft + " months left @ " + decialHund.format( (double)amountPerPayment) + " each.");
@@ -124,6 +130,13 @@ public class EmployeeCustomerManagerService {
 	}
 	
 	public void printUsers (List<User> userHolder) {
+		if (userHolder.isEmpty()) {
+			System.out.println("\n||---------------------------------------------||");
+			System.out.println("No customers with cars");
+			return;
+		}
+		
+		System.out.println("\n||---------------------------------------------||");
 		for(int i = 0; i < userHolder.size(); i++) {
 			System.out.println("[" + (i + 1) + "] " + userHolder.get(i).getUsername());
 		}

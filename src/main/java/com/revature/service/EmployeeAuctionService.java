@@ -26,6 +26,7 @@ public class EmployeeAuctionService extends AuctionService{
 	@Override
 	protected void optionChoice () {
 		while (true) {
+			System.out.println("\n||=============================================||");
 			printHeaderMessage();
 			printOptionMenu();
 			

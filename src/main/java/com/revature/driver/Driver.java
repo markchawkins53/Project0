@@ -25,12 +25,18 @@ public class Driver {
 			else if (currentUser.getUserType().equals(User.UserType.Employee)) {
 				portServ = new EmployeePortalService();
 				portServ.userPortServMain(currentUser);
+
+				System.out.println("");
 			}
+
 		}
 	}
 	
 	private static boolean userLogin() {
 		while (true) {
+			
+			System.out.println("||=============================================||");
+			
 			System.out.println("[1]: Login as Customer");
 			System.out.println("[2]: Login as Employee");
 			System.out.println("[3]: Exit Program");
@@ -43,6 +49,7 @@ public class Driver {
 				if (currentUser != null)
 					return true;
 				
+				System.out.println();
 				break;
 			case "2":
 				logDriver = new EmployeeLoginService();
@@ -51,6 +58,7 @@ public class Driver {
 				if (currentUser != null)
 					return true;
 				
+				System.out.println();
 				break;
 			case "3":
 				return false;

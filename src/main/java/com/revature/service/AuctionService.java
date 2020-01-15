@@ -57,11 +57,16 @@ public class AuctionService {
 		newPost.setCar(createCar());
 		newPost.setBids(new HashMap<String, Float>());
 		
+		System.out.println("\n||---------------------------------------------||");
+		System.out.println("Auction Added");
+		
 		return newPost;
 	}
 	
 	public Car createCar () {
 		Car newCar = new Car();
+		
+		System.out.println("\n||---------------------------------------------||");
 		
 		System.out.println("Please Enter The Car's Make: ");
 		newCar.setMake(scan.nextLine());
@@ -85,12 +90,20 @@ public class AuctionService {
 		
 		aucPosts.remove(carIndex - 1);
 		aucDB.serializeDB(aucPosts);
+		System.out.println("\n||---------------------------------------------||");
 		System.out.println("Removed Car From Lot");
 		
 		return true;
 	}
 	
 	public void showAucPosts () {
+		if (aucPosts.isEmpty()) {
+			System.out.println("\n||---------------------------------------------||");
+			System.out.println("No cars on lot");
+			return;
+		}
+		
+		System.out.println("\n||---------------------------------------------||");
 		for (int i = 0; i < aucPosts.size(); i++) {
 			System.out.println("[" + (i + 1) + "] " + aucPosts.get(i).getCar().getCarInfo());
 		}
@@ -103,6 +116,7 @@ public class AuctionService {
 			return;
 		
 		if (aucPosts.get(carIndex - 1).getBids().isEmpty()) {
+			System.out.println("\n||---------------------------------------------||");
 			System.out.println("There are no bid currently on this auction");
 			return;
 		}
@@ -120,7 +134,7 @@ public class AuctionService {
 				System.out.println("[" + usernames.size() + "] " + bid.getValue());
 			}
 			
-			System.out.println("");
+			System.out.println("\n||---------------------------------------------||");
 			System.out.println("Bids Management");
 			System.out.println("[1] Accept a bid");
 			System.out.println("[2] Reject a Bid");
@@ -136,7 +150,9 @@ public class AuctionService {
 			case "3":
 				return;
 			default:
+				System.out.println("\n||---------------------------------------------||");
 				System.out.println("Please select a valid bid.");
+				break;
 			}
 		}
 		
@@ -145,11 +161,13 @@ public class AuctionService {
 	public void acceptBid (int postIndex, List<String> usernames) {
 		int bidIndex = 0;
 		
+		System.out.println("\n||---------------------------------------------||");
 		System.out.println("Please select a bid to accept");
 		
 		try {
 			bidIndex = Integer.parseInt(scan.nextLine());
 		} catch (NumberFormatException e) {
+			System.out.println("\n||---------------------------------------------||");
 			System.out.println("Please select a valid number");
 			return;
 		}
@@ -157,6 +175,7 @@ public class AuctionService {
 		try {
 			aucPosts.get(bidIndex - 1);
 		}catch (IndexOutOfBoundsException e) {
+			System.out.println("\n||---------------------------------------------||");
 			System.out.println("Please select a valid number");
 			return;
 		}
@@ -177,17 +196,19 @@ public class AuctionService {
 		
 		aucPosts.remove(postIndex - 1);
 		aucDB.serializeDB(aucPosts);
-		System.out.println("Accepted Bid From Car\n");
+		System.out.println("Accepted Bid From Car");
 	}
 	
 	public void removeBid (int carIndex, List<String> usernames) {
 		int bidIndex = 0;
 		
+		System.out.println("\n||---------------------------------------------||");
 		System.out.println("Please select a bid to remove");
 		
 		try {
 			bidIndex = Integer.parseInt(scan.nextLine());
 		} catch (NumberFormatException e) {
+			System.out.println("\n||---------------------------------------------||");
 			System.out.println("Please select a valid number");
 			return;
 		}
@@ -195,12 +216,14 @@ public class AuctionService {
 		try {
 			aucPosts.get(bidIndex - 1);
 		}catch (IndexOutOfBoundsException e) {
+			System.out.println("\n||---------------------------------------------||");
 			System.out.println("Please select a valid number");
 			return;
 		}
 		
 		aucPosts.get(carIndex - 1).getBids().remove(usernames.get(bidIndex - 1));
 		aucDB.serializeDB(aucPosts);
+		System.out.println("\n||---------------------------------------------||");
 		System.out.println("Removed Bid From Car\n");
 	}
 	
@@ -211,27 +234,32 @@ public class AuctionService {
 		if (carIndex < 0)
 			return;
 		
+		System.out.println("\n||---------------------------------------------||");
 		System.out.println("How much would like to bid for the car?");
 		
 		try {
 			carBid = Float.parseFloat(scan.nextLine());
 		} catch (NumberFormatException e) {
+			System.out.println("\n||---------------------------------------------||");
 			System.out.println("Please select a valid number");
 			return;
 		}
 		
 		aucPosts.get(carIndex - 1).getBids().put(currentUser.getUsername(), carBid);
 		aucDB.serializeDB(aucPosts);
-		System.out.println("Added Bid To Car\n");
+		System.out.println("\n||---------------------------------------------||");
+		System.out.println("Added Bid To Car");
 	}
 	
 	public int getLotIndex () {
+		System.out.println("\n||---------------------------------------------||");
 		System.out.println("Please select car's lot number: ");
 		Integer carIndex = null;
 		
 		try {
 			carIndex = Integer.parseInt(scan.nextLine());
 		} catch (NumberFormatException e) {
+			System.out.println("\n||---------------------------------------------||");
 			System.out.println("Please select a valid lot number.");
 			return -1;
 		}
@@ -239,6 +267,7 @@ public class AuctionService {
 		try {
 			aucPosts.get(carIndex - 1);
 		}catch (IndexOutOfBoundsException e) {
+			System.out.println("\n||---------------------------------------------||");
 			System.out.println("Please select a valid lot number.");
 			return -1;
 		}

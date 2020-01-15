@@ -13,6 +13,7 @@ public class CustomerPortalService extends UserPortalService {
 	@Override
 	public void userPortServMain (User curUser) {
 		while (true) {
+			System.out.println("\n||=============================================||");
 			printHeaderMessage();
 			printOptionMenu();
 			

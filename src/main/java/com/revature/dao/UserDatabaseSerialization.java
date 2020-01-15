@@ -14,8 +14,8 @@ import com.revature.pojo.User;
 public class UserDatabaseSerialization implements UserDatabaseDAO{
 
 	@Override
-	public void serializeDB (Map<String, User> userDB, String fileString) {
-		String filename = fileString + "DB.dat";
+	public void serializeDB (Map<String, User> userDB, String userType) {
+		String filename = userType + "DB.dat";
 		
 		try (FileOutputStream fos = new FileOutputStream(filename);
 				ObjectOutputStream oos = new ObjectOutputStream(fos)) {
@@ -29,9 +29,10 @@ public class UserDatabaseSerialization implements UserDatabaseDAO{
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, User> deserializeDB (String fileString) {
-		String filename = fileString + "DB.dat";
+	public Map<String, User> deserializeDB (String userType) {
+		String filename = userType + "DB.dat";
 		Map<String, User> userDB = null;
 		
 		try (FileInputStream fis = new FileInputStream(filename);
@@ -42,10 +43,10 @@ public class UserDatabaseSerialization implements UserDatabaseDAO{
 		} catch (FileNotFoundException e) {
 			userDB = new HashMap<String, User>();
 			return userDB;
-		}catch (IOException e) {
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			return null;
-		} catch (ClassNotFoundException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -54,8 +55,33 @@ public class UserDatabaseSerialization implements UserDatabaseDAO{
 	}
 	
 	@Override
+	public void addUser () {
+		
+	}
+	
+	@Override
+	public void removeUser () {
+		
+	}
+	
+	@Override
 	public void updateUser (Map<String, User> userDB, User userToUpdate) {
 		userDB.put(userToUpdate.getUsername(), userToUpdate);
 		serializeDB(userDB, userToUpdate.getUserType().toString());
+	}
+	
+	@Override
+	public User getUser (String username, User.UserType userType) {
+		Map<String, User> dbHolder = deserializeDB(userType.toString());
+		
+		try {
+			dbHolder.get(username);
+		} catch (ClassCastException e) {
+			return null;
+		} catch (NullPointerException e) {
+			return null;
+		}
+				
+		return dbHolder.get(username);
 	}
 }
