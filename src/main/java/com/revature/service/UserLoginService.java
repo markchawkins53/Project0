@@ -1,19 +1,8 @@
 package com.revature.service;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import com.revature.dao.UserDatabaseSerialization;
-import com.revature.pojo.Car;
 import com.revature.pojo.User;
 
 public class UserLoginService {
@@ -25,27 +14,33 @@ public class UserLoginService {
 	public User logDriverMain () {
 		User userInfo;
 		
+		//Setup information required for operation
 		setUserType();
 		userDB.deserializeDB(userType);
 		
+		//Loop Menu for user to choose options
 		while (true) {
 			System.out.println("\n||=============================================||");
 			printLoginMessage();
 			printOptionMenu();
 			
 			switch (scan.nextLine()) {
+			//User login
 			case "1":
 				userInfo = getUserInfoInput();
-				if (checkLoginInfo(userInfo)) {
+				if (authenticateUser(userInfo)) {
 					return userDB.getUser(userInfo.getUsername());
 				}
 				break;
+			//Create new user
 			case "2": 
 				registerUser();
 				break;
+			//Exit
 			case "3":
 				return null;
 			default:
+				System.out.println("\n||---------------------------------------------||");
 				System.out.println("Did not understand input. Please select a proper input.");
 				break;
 			}
@@ -53,16 +48,30 @@ public class UserLoginService {
 		}
 	}
 	
+//========================================================================
+//				Methods to Override in children
+//========================================================================
+	//Message displayed before Options Menu
 	public void printLoginMessage () {
 		System.out.println("User Login");
 	}
 	
+	//Message displayed with all the choices the user will be able to do
 	public void printOptionMenu () {
 		System.out.println("[1]: Login");
 		System.out.println("[2]: Register");
 		System.out.println("[3]: Exit to Select User Type");
 	}
 	
+	//Called at start of logDriverMain to assign a User type to the Login Service
+	public void setUserType () {
+		userType = User.UserType.Generic;
+	}
+	
+//========================================================================
+//			Login Service Universal Methods
+//========================================================================
+	//Get username and password from user
 	public User getUserInfoInput () {
 		User userInput = new User ();
 		
@@ -77,59 +86,52 @@ public class UserLoginService {
 		return userInput;
 	}
 	
-	public boolean checkLoginInfo (User loginInfo) {
-		if (authenticateUser(loginInfo)) {
-			System.out.println("\n||---------------------------------------------||");
-			System.out.println("Successful Login");
-			return true;
-		}
-		System.out.println("\n||---------------------------------------------||");
-		System.out.println("Invalid Username/Password");
-		
-		return false;
-	}
-	
-	public User registerUser () {		
+	//Create a new user
+	public void registerUser () {		
 		String username = "";
 		String password = "";
 		
 		while (true) {
+			//Get username and password for new user
 			System.out.println("\n||---------------------------------------------||");
 			System.out.println("Please enter a Username to use: ");
 			
 			username = scan.nextLine();
 			if (userDB.checkUserExists(username)) {
 				System.out.println("\n||---------------------------------------------||");
-				System.out.println("Username currently in use.");
+				System.out.println("Username currently in use. Please choose a new one.");
 				continue;
 			}
 			
 			System.out.println("Please enter a Password to use: ");
 			password = scan.nextLine();
 			
+			//Assign username and password to new user
 			userDB.addUser(username, password);
 			userDB.serializeDB();
 			
 			break;
 		}	
-		
-		return null;
 	}
 	
-	public void setUserType () {
-		userType = User.UserType.Generic;
-	}
-	
+	//Check if User's username and password match any user in the system
 	public boolean authenticateUser (User authUser) {
-		if (!userDB.checkUserExists(authUser.getUsername()))
-			return false;
+		//Check if user exists
+		if (userDB.checkUserExists(authUser.getUsername())) {
+			
+			User userHolder = userDB.getUser(authUser.getUsername());
+			
+			//Check if password check is correct
+			if (userHolder.getPassword().equals(authUser.getPassword())) {
+				System.out.println("\n||---------------------------------------------||");
+				System.out.println("Successful Login");
+				return true;
+			}
+		}
+		System.out.println("\n||---------------------------------------------||");
+		System.out.println("Invalid Username/Password");
 		
-		User userHolder = userDB.getUser(authUser.getUsername());
-		
-		if (userHolder.getPassword().equals(authUser.getPassword()))
-			return true;
-		else
-			return false;
+		return false;
 	}
 	
 
