@@ -3,13 +3,12 @@ package com.revature.service;
 import com.revature.pojo.User;
 
 public class EmployeeLoginService extends UserLoginService {
-	
-	public EmployeeLoginService () {
-		userType = User.UserType.Employee;
-	}
-	
+
+//========================================================================
+//			Methods Overridden from parent
+//========================================================================
 	@Override
-	public void printLoginMessage () {
+	public void printHeaderMessage () {
 		System.out.println("Employee Login");
 	}
 	

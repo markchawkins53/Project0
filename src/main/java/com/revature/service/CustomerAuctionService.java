@@ -2,6 +2,8 @@ package com.revature.service;
 
 import java.util.Scanner;
 
+import com.revature.pojo.AuctionPosting;
+
 public class CustomerAuctionService extends AuctionService{
 	
 	private static Scanner scan = new Scanner(System.in);
@@ -30,6 +32,7 @@ public class CustomerAuctionService extends AuctionService{
 				showAucPosts();
 				break;
 			case "2":
+				showAucPosts();
 				addBid();
 				break;
 			case "3":
@@ -40,4 +43,31 @@ public class CustomerAuctionService extends AuctionService{
 			}
 		}
 	}
+	
+	public void addBid() {		
+		AuctionPosting aucPost = getLotPost();
+		float carBid = 0;
+		
+		if (aucPost == null)
+			return;
+		
+		System.out.println("\n||---------------------------------------------||");
+		System.out.println("How much would like to bid for the car?");
+		
+		try {
+			carBid = Float.parseFloat(scan.nextLine());
+		} catch (NumberFormatException e) {
+			System.out.println("\n||---------------------------------------------||");
+			System.out.println("Please select a valid number");
+			return;
+		}
+		
+		aucPost.getBids().put(currentUser.getUsername(), carBid);
+		aucDB.updatePost(aucPost);
+		aucDB.serializeDB();
+		
+		System.out.println("\n||---------------------------------------------||");
+		System.out.println("Added Bid To Car");
+	}
+	
 }

@@ -18,6 +18,8 @@ public class EmployeeCustomerManagerService {
 	private static List<User> users;
 	
 	public void custManSerMain() {
+		userDB.deserializeDB(User.UserType.Customer);
+		
 		users = getUsersFromDB();
 		users = getUsersWithCars(users);
 		
@@ -31,7 +33,10 @@ public class EmployeeCustomerManagerService {
 				printUsers(users);
 				break;
 			case "2":
-				getUsersPayments(getUser(selectUser()));
+				int userIndex = selectUser();
+				User selectedUser = getUser(userIndex);
+				
+				getUsersPayments(selectedUser);
 				break;
 			case "3":
 				return;
@@ -53,9 +58,7 @@ public class EmployeeCustomerManagerService {
 		System.out.println("[3] Exit Menu");
 	}
 	
-	public List<User> getUsersFromDB() {
-		userDB.deserializeDB(User.UserType.Customer);
-		
+	public List<User> getUsersFromDB() {		
 		Iterator usersFromDB = userDB.getDbHolder().entrySet().iterator();
 		List<User> usersHolder = new LinkedList<>();
 		
@@ -83,6 +86,9 @@ public class EmployeeCustomerManagerService {
 	}
 	
 	public User getUser (int userIndex) {
+		if (users == null)
+			return null;
+		
 		try {
 			users.get(userIndex - 1);
 		}catch (IndexOutOfBoundsException e) {
@@ -94,6 +100,13 @@ public class EmployeeCustomerManagerService {
 	
 	public int selectUser() {
 		int tempIndex = 0;
+		
+		if (users == null || users.isEmpty()) {
+			return -1;
+		}
+			
+
+		printUsers(users);
 		
 		System.out.println("\n||---------------------------------------------||");
 		System.out.println("Please select a user with a car");
@@ -119,9 +132,11 @@ public class EmployeeCustomerManagerService {
 	
 	public void getUsersPayments (User userHolder) {
 		if (userHolder == null) {
+			System.out.println("\n||---------------------------------------------||");
+			System.out.println("No customers with cars");
 			return;
 		}
-		
+				
 		System.out.println("\n||---------------------------------------------||");
 		for (Car c: userHolder.getOwnedCars()) {
 			int paymentsLeft = c.getRemPayments().size();
@@ -132,7 +147,7 @@ public class EmployeeCustomerManagerService {
 	}
 	
 	public void printUsers (List<User> userHolder) {
-		if (userHolder.isEmpty()) {
+		if (userHolder == null || userHolder.isEmpty()) {
 			System.out.println("\n||---------------------------------------------||");
 			System.out.println("No customers with cars");
 			return;

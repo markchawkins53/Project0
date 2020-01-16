@@ -4,15 +4,18 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Scanner;
 
+import com.revature.dao.UserDatabaseSerialization;
 import com.revature.pojo.Car;
 import com.revature.pojo.User;
 
 public class CustomerCarManagerService {
+	UserDatabaseSerialization userDB = new UserDatabaseSerialization();
 
 	private Scanner scan = new Scanner(System.in);
 	private User currentUser = null;
 	
 	public void carManServMain (User curUser) {
+		userDB.deserializeDB(User.UserType.Customer);
 		currentUser = curUser;
 		
 		while (true) {
@@ -22,12 +25,15 @@ public class CustomerCarManagerService {
 			
 			switch (scan.nextLine()) {
 			case "1":
-				viewUserCars();
+				printUserCars();
 				break;
 			case "2":
-				viewPaymentsLeftOnCar();
+				printPaymentsLeftOnCar(getCar());
 				break;
 			case "3":
+				makePayment();
+				break;
+			case "4":
 				return;
 			default:
 				System.out.println("\n||---------------------------------------------||");
@@ -37,7 +43,18 @@ public class CustomerCarManagerService {
 		}
 	}
 	
-	public void viewUserCars () {
+	public void printHeaderMessage () {
+		System.out.println("Owned Car Manager");
+	}
+	
+	public void printOptionMenu () {
+		System.out.println("[1] Look At Owned Cars");
+		System.out.println("[2] View Payments Left On Owned Car");
+		System.out.println("[3] Make Payment On Owned Car");
+		System.out.println("[4] Exit");
+	}
+	
+	public void printUserCars () {
 		List<Car> ownedCars = currentUser.getOwnedCars();
 		
 		if (ownedCars.isEmpty()) {
@@ -53,8 +70,11 @@ public class CustomerCarManagerService {
 			
 	}
 	
-	public void viewPaymentsLeftOnCar() {
+	public Car getCar() {
 		int ownedCarIndex = 0;
+		
+		printUserCars();
+		
 		System.out.println("\n||---------------------------------------------||");
 		System.out.println("Please select a car you own");
 		
@@ -63,7 +83,7 @@ public class CustomerCarManagerService {
 		} catch (NumberFormatException e) {
 			System.out.println("\n||---------------------------------------------||");
 			System.out.println("Please select a valid number");
-			return;
+			return null;
 		}
 		
 		try {
@@ -71,24 +91,42 @@ public class CustomerCarManagerService {
 		}catch (IndexOutOfBoundsException e) {
 			System.out.println("\n||---------------------------------------------||");
 			System.out.println("Please select a valid number");
-			return;
+			return null;
 		}
 		
-		int paymentsLeft = currentUser.getOwnedCars().get(ownedCarIndex - 1).getRemPayments().size();
-		Float amountPerPayment = currentUser.getOwnedCars().get(ownedCarIndex - 1).getRemPayments().get(0);
+		return currentUser.getOwnedCars().get(ownedCarIndex - 1);
+	}
+	
+	public void printPaymentsLeftOnCar(Car ownedCar) {		
+		int paymentsLeft = ownedCar.getRemPayments().size();
+		Float amountPerPayment = ownedCar.getRemPayments().get(0);
 		DecimalFormat decialHund = new DecimalFormat("#.##");
 		
 		System.out.println("\n||---------------------------------------------||");
 		System.out.println("You have " + paymentsLeft + " months left @ " + decialHund.format( (double)amountPerPayment) + " each.");
 	}
 	
-	public void printHeaderMessage () {
-		System.out.println("Owned Car Manager");
-	}
-	
-	public void printOptionMenu () {
-		System.out.println("[1] Look At Owned Cars");
-		System.out.println("[2] View Payments Left On Owned Car");
-		System.out.println("[3] Logout");
+	public boolean makePayment () {
+		Car chosenCar = getCar();
+		
+		printPaymentsLeftOnCar(chosenCar);
+		
+		if (chosenCar == null)
+			return false;
+		
+		if (chosenCar.getRemPayments().isEmpty()) {
+			System.out.println("\n||---------------------------------------------||");
+			System.out.println("There are no payments to be made");
+			return false;
+		}
+		
+		chosenCar.getRemPayments().remove(chosenCar.getRemPayments().size() - 1);
+		System.out.println("\n||---------------------------------------------||");
+		System.out.println("Payment Successful");
+		
+		userDB.updateUser(currentUser);
+		userDB.serializeDB();
+		
+		return true;
 	}
 }

@@ -21,7 +21,7 @@ public class UserLoginService {
 		//Loop Menu for user to choose options
 		while (true) {
 			System.out.println("\n||=============================================||");
-			printLoginMessage();
+			printHeaderMessage();
 			printOptionMenu();
 			
 			switch (scan.nextLine()) {
@@ -52,7 +52,7 @@ public class UserLoginService {
 //				Methods to Override in children
 //========================================================================
 	//Message displayed before Options Menu
-	public void printLoginMessage () {
+	public void printHeaderMessage () {
 		System.out.println("User Login");
 	}
 	
@@ -107,7 +107,7 @@ public class UserLoginService {
 			password = scan.nextLine();
 			
 			//Assign username and password to new user
-			userDB.addUser(username, password);
+			userDB.createUser(username, password);
 			userDB.serializeDB();
 			
 			break;
@@ -128,6 +128,7 @@ public class UserLoginService {
 				return true;
 			}
 		}
+		
 		System.out.println("\n||---------------------------------------------||");
 		System.out.println("Invalid Username/Password");
 		

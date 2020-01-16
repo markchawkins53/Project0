@@ -4,12 +4,11 @@ import com.revature.pojo.User;
 
 public class CustomerLoginService extends UserLoginService {
 
-	public CustomerLoginService () {
-		userType = User.UserType.Customer;
-	}
-	
+//========================================================================
+//			Methods Overridden from parent
+//========================================================================	
 	@Override
-	public void printLoginMessage () {
+	public void printHeaderMessage () {
 		System.out.println("Customer Login");
 	}
 	

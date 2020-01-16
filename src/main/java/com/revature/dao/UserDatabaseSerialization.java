@@ -23,8 +23,8 @@ public class UserDatabaseSerialization implements UserDatabaseDAO{
 //========================================================================
 	//Save Database to file
 	@Override
-	public void serializeDB () {
-		//Save database to database based on User Type
+	public boolean serializeDB () {
+		//Save to database based on User Type
 		String filename = dbUserType.toString() + "DB.dat";
 		
 		try (FileOutputStream fos = new FileOutputStream(filename);
@@ -34,9 +34,13 @@ public class UserDatabaseSerialization implements UserDatabaseDAO{
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			return false;
 		}catch (IOException e) {
 			e.printStackTrace();
+			return false;
 		}
+		
+		return true;
 	}
 	
 	//Open a User Database and apply it to  a variable 
@@ -81,7 +85,7 @@ public class UserDatabaseSerialization implements UserDatabaseDAO{
 	
 	//Add a user to the database
 	@Override
-	public boolean addUser (String username, String password) {
+	public boolean createUser (String username, String password) {
 		User newUser = new User();
 
 		if (checkUserExists(username))
