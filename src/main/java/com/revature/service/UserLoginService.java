@@ -2,6 +2,7 @@ package com.revature.service;
 
 import java.util.Scanner;
 
+import com.revature.dao.UserDAOPostgres;
 import com.revature.dao.UserDatabaseSerialization;
 import com.revature.pojo.User;
 
@@ -9,6 +10,7 @@ public class UserLoginService {
 
 	private static Scanner scan = new Scanner(System.in);
 	private static UserDatabaseSerialization userDB = new UserDatabaseSerialization();
+	//private static UserDAOPostgres userPos = new UserDAOPostgres();
 	protected User.UserType userType = User.UserType.Generic;
 	
 	public User logDriverMain () {
@@ -29,6 +31,7 @@ public class UserLoginService {
 			case "1":
 				userInfo = getUserInfoInput();
 				if (authenticateUser(userInfo)) {
+//return userPos.getByUsername(userInfo.getUsername());
 					return userDB.getUser(userInfo.getUsername());
 				}
 				break;
@@ -97,6 +100,7 @@ public class UserLoginService {
 			System.out.println("Please enter a Username to use: ");
 			
 			username = scan.nextLine();
+			
 			if (userDB.checkUserExists(username)) {
 				System.out.println("\n||---------------------------------------------||");
 				System.out.println("Username currently in use. Please choose a new one.");
@@ -107,6 +111,8 @@ public class UserLoginService {
 			password = scan.nextLine();
 			
 			//Assign username and password to new user
+//userPos.add(new User(username, password, userType));
+			
 			userDB.createUser(username, password);
 			userDB.serializeDB();
 			
@@ -120,6 +126,11 @@ public class UserLoginService {
 		if (userDB.checkUserExists(authUser.getUsername())) {
 			
 			User userHolder = userDB.getUser(authUser.getUsername());
+		
+//	if (userPos.getByUsername(authUser.getUsername()) == null)
+//		return false;
+//	
+//	User userHolder = userPos.getByUsername(authUser.getUsername());
 			
 			//Check if password check is correct
 			if (userHolder.getPassword().equals(authUser.getPassword())) {

@@ -3,6 +3,8 @@ package com.revature.pojo;
 import java.io.Serializable;
 import java.util.List;
 
+import com.revature.pojo.User;
+
 public class User implements Serializable{
 
 	public enum UserType {
@@ -18,6 +20,17 @@ public class User implements Serializable{
 
 	private List<Car> ownedCars;
 	
+	public User() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	public User(String username, String password, UserType userType) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.userType = userType;
+	}
 	
 	public UserType getUserType() {
 		return userType;
@@ -44,4 +57,16 @@ public class User implements Serializable{
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public User.UserType getUserTypeByInt(int i) {
+		switch (i) {
+		case 1:
+			return User.UserType.Customer;
+		case 2:
+			return User.UserType.Employee;
+		default:
+			return null;
+		}
+	}
+	
 }

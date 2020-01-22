@@ -75,6 +75,9 @@ public class CustomerCarManagerService {
 		
 		printUserCars();
 		
+		if (currentUser.getOwnedCars().isEmpty())
+			return null;
+			
 		System.out.println("\n||---------------------------------------------||");
 		System.out.println("Please select a car you own");
 		
@@ -97,7 +100,10 @@ public class CustomerCarManagerService {
 		return currentUser.getOwnedCars().get(ownedCarIndex - 1);
 	}
 	
-	public void printPaymentsLeftOnCar(Car ownedCar) {		
+	public void printPaymentsLeftOnCar(Car ownedCar) {
+		if (ownedCar == null)
+			return;
+		
 		int paymentsLeft = ownedCar.getRemPayments().size();
 		Float amountPerPayment = ownedCar.getRemPayments().get(0);
 		DecimalFormat decialHund = new DecimalFormat("#.##");
